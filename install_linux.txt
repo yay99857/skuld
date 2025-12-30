@@ -1,0 +1,46 @@
+ Pré-requisitos (instale no Arch)
+Atualize o sistema:
+
+sudo pacman -Syu
+Pacotes nativos necessários:
+
+sudo pacman -S --needed base-devel pkgconf nodejs npm webkit2gtk libsecret openssl
+(opcional) libappindicator (algumas distros/AUR usam libayatana-appindicator)
+Esses são os itens principais: WebKitGTK (webkit2gtk) é essencial para Tauri/WebView.
+Instale Rust (recomendado via rustup):
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.cargo/env
+rustup default stable
+Ferramentas Tauri (serão usadas via npm devDep @tauri-apps/cli ou localmente via scripts):
+Já está em devDependencies do projeto, então basta a instalação de node deps (ver abaixo).
+
+🚀 Comandos para build (no diretório app)
+Instale dependências JS (se usar bun/no projeto):
+
+bun install
+(ou) npm install / pnpm install / yarn install
+Gere assets web (prod):
+
+bun run build
+(ou) npm run build
+Faça o build do binário/bundle Tauri:
+
+bun run bundle
+(ou) npm run tauri build
+(ou) npx tauri build
+Observação: o package.json do projeto já tem "bundle": "bun run tauri build", então bun run bundle é o atalho usado aqui.
+
+📁 Onde encontrar o resultado
+Artefatos ficam em: src-tauri/target/release/bundle/
+(Ex.: AppImage em src-tauri/target/release/bundle/appimage/ ou pastas deb/rpm dependendo da configuração de tauri.conf.json.)
+✅ Checagens úteis / resolução de problemas
+Ver info do ambiente Tauri:
+bun run tauri info
+(ou) npx tauri info
+Erros comuns:
+“missing webkit deps” → confirme que webkit2gtk está instalado
+Problemas com openssl → instale openssl e exporte PKG_CONFIG_PATH se necessário
+Erros no bundle (linuxdeploy/appimagetool) → Tauri normalmente baixa os utilitários; se falhar, instale via AUR (ex.: appimagetool) ou cheque logs
+🧭 Cross-compile / outras arquiteturas
+Para outras arquiteturas (aarch64, etc.) você precisa adicionar alvo Rust e toolchains de cross-compile; para builds simples no Arch x86_64 não é necessário.

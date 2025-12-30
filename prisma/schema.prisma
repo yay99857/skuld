@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Note {
+  id          String    @id @default(uuid())
+  title       String
+  content     String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  hash        String?   // For sync
+  notebook    Notebook? @relation(fields: [notebookId], references: [id])
+  notebookId  String?   @map("notebook_id")
+  tags        NoteTag[]
+
+  @@map("notes")
+}
+
+model Notebook {
+  id        String   @id @default(uuid())
+  name      String
+  notes     Note[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("notebooks")
+}
+
+model Tag {
+  id    String    @id @default(uuid())
+  name  String    @unique
+  notes NoteTag[]
+
+  @@map("tags")
+}
+
+model NoteTag {
+  note    Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  noteId  String @map("note_id")
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId   String @map("tag_id")
+
+  @@id([noteId, tagId])
+  @@map("note_tags")
+}

@@ -1,6 +1,8 @@
 ## Demo:
 <img width="1913" height="1015" alt="skuld" src="https://github.com/user-attachments/assets/ee10e595-e65a-4f12-a286-8968d449a01e" />
 
+Made with AI.
+
 
 ## Keyboard Shortcuts
 
